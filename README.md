@@ -25,7 +25,7 @@ RealCrypto Trader is a real-time cryptocurrency trading platform that fetches li
 
 1️⃣ Clone the Repository
 
- git clone https://github.com/ShivankBhasin/RealCrypto-Trader.git
+ git clone https://github.com/ShivankBhasin/RealCrypto-Trader-.git
  cd RealCrypto-Trader
 
 2️⃣ Create a Virtual Environment
