@@ -48,19 +48,3 @@ BINANCE_SECRET_KEY=your_secret_key
 5️⃣ Run the Application
 
  python run.py
-
-🏗️ Project Structure:
-   RealCrypto-Trader/
-    │── app/
-    │   │── __init__.py  # Initializes Flask app
-    │   │── routes.py  # API routes for price fetching
-    │   │── websocket.py  # WebSocket for live prices
-    │   │── config.py  # Loads API keys & config
-    │── static/
-    │   │── style.css  # Stylesheet
-    │── templates/
-    │   │── index.html  # Frontend UI
-    │── run.py  # Starts the Flask server
-    │── requirements.txt  # Project dependencies
-    │── .env  # API keys (ignored in .gitignore)
-    │── README.md  # Project documentation
