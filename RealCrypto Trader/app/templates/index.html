@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealCrypto Trader</title>
+    
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #EAECEF;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+        .crypto-table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .crypto-table td {
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .crypto-table td:hover {
+            background: linear-gradient(135deg, #fff200, #ffbf00);
+            color: #121212;
+        }
+        .crypto-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .crypto-box img {
+            width: 24px;
+            height: 24px;
+        }
+        .graph-container {
+            display: none;
+            width: 80%;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .portfolio-btn {
+            background-color: #00d5ff;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .portfolio-btn:hover {
+            background-color: #00fff2;
+        }
+        .menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .menu img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            background: #1E1E1E;
+            border-radius: 5px;
+            right: 10px;
+            top: 50px;
+            width: 120px;
+        }
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+        }
+        .dropdown a:hover {
+            background: #e5ff00;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>RealCrypto Trader</h1>
+
+    <div class="menu">
+        <img src="{{ url_for('static', filename='App-logo.jpg') }}" onclick="toggleDropdown()">
+        <div class="dropdown" id="dropdownMenu">
+            <a href="{{ url_for('portfolio') }}">My Portfolio</a>
+            <a href="#" onclick="closeApp()">Close App</a>
+        </div>
+    </div>
+
+    <table class="crypto-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr onclick="toggleGraph('Bitcoin', [70000, 72000, 75000, 77000, 78000, 80000, 82000, 85000, 86000, 89000, 90000])">
+                <td>
+                    <div class="crypto-box">
+                        <img src="{{ url_for('static', filename='bitcoin-btc-logo.png') }}" alt="BTC"> BTC
+                    </div>
+                </td>
+                <td id="BTCUSDT">{{ prices["BTCUSDT"] }}</td>
+                <td><button class="portfolio-btn" onclick="addToPortfolio(event, 'Bitcoin')">Add to Portfolio</button></td>
+            </tr>
+            <tr onclick="toggleGraph('Ethereum', [1000, 1500, 2000, 25000])">
+                <td>
+                    <div class="crypto-box">
+                        <img src="{{ url_for('static', filename='ethereum-eth-logo.png') }}" alt="ETH"> ETH
+                    </div>
+                </td>
+                <td id="ETHUSDT">{{ prices["ETHUSDT"] }}</td>
+                <td><button class="portfolio-btn" onclick="addToPortfolio(event, 'Ethereum')">Add to Portfolio</button></td>
+            </tr>
+            <tr onclick="toggleGraph('BNB', [500, 515, 530, 545, 600, 615])">
+                <td>
+                    <div class="crypto-box">
+                        <img src="{{ url_for('static', filename='bnb-bnb-logo.png') }}" alt="BNB"> BNB
+                    </div>
+                </td>
+                <td id="BNBUSDT">{{ prices["BNBUSDT"] }}</td>
+                <td><button class="portfolio-btn" onclick="addToPortfolio(event, 'BNB')">Add to Portfolio</button></td>
+            </tr>
+            <tr onclick="toggleGraph('Cardano', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,])">
+                <td>
+                    <div class="crypto-box">
+                        <img src="{{ url_for('static', filename='cardano-ada-logo.png') }}" alt="ADA"> ADA
+                    </div>
+                </td>
+                <td id="ADAUSDT">{{ prices["ADAUSDT"] }}</td>
+                <td><button class="portfolio-btn" onclick="addToPortfolio(event, 'Cardano')">Add to Portfolio</button></td>
+            </tr>
+            <tr onclick="toggleGraph('Solana', [90, 95, 100, 105, 110, 115, 120, 125, 130, 128, 130, 135, 137, 139, 138, 139, 135, 138, 140])">
+                <td>
+                    <div class="crypto-box">
+                        <img src="{{ url_for('static', filename='solana-sol-logo.png') }}" alt="SOL"> SOL
+                    </div>
+                </td>
+                <td id="SOLUSDT">{{ prices["SOLUSDT"] }}</td>
+                <td><button class="portfolio-btn" onclick="addToPortfolio(event, 'Solana')">Add to Portfolio</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="graph-container" id="graphContainer">
+        <canvas id="cryptoChart"></canvas>
+    </div>
+
+    <script>
+        let graphVisible = false;
+
+        function toggleGraph(name, data) {
+            let graphContainer = document.getElementById("graphContainer");
+
+            if (graphVisible) {
+                graphContainer.style.display = "none";
+                graphVisible = false;
+                return;
+            }
+
+            graphContainer.style.display = "block";
+            const ctx = document.getElementById('cryptoChart').getContext('2d');
+            if (window.cryptoChartInstance) {
+                window.cryptoChartInstance.destroy();
+            }
+            window.cryptoChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"],
+                    datasets: [{
+                        label: name + " Price History",
+                        data: data,
+                        borderColor: "#FFD700",
+                        backgroundColor: "rgba(255, 215, 0, 0.2)",
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeInOutQuad'
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: "Days" } },
+                        y: { title: { display: true, text: "Price (USD)" } }
+                    }
+                }
+            });
+
+            graphVisible = true;
+        }
+
+        function addToPortfolio(event, cryptoName) {
+            event.stopPropagation();
+            alert(cryptoName + " Added to Portfolio");
+        }
+
+        function toggleDropdown() {
+            let dropdown = document.getElementById("dropdownMenu");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        function closeApp() {
+            window.close();
+        }
+    </script>
+    <script>
+        function updatePrices() {
+            fetch('/get_prices')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("BTCUSDT").innerText = data["BTCUSDT"];
+                    document.getElementById("ETHUSDT").innerText = data["ETHUSDT"];
+                    document.getElementById("BNBUSDT").innerText = data["BNBUSDT"];
+                    document.getElementById("ADAUSDT").innerText = data["ADAUSDT"];
+                })
+                .catch(error => console.error('Error fetching prices:', error));
+        }
+    
+        setInterval(updatePrices, 5000);
+    </script>    
+</body>
+</html>

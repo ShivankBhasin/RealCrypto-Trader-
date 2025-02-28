@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio - RealCrypto Trader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #EAECEF;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+        .portfolio-table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .portfolio-table td {
+            padding: 15px;
+            text-align: center;
+        }
+        .portfolio-table th {
+            background-color: #FFD700;
+            color: black;
+            padding: 10px;
+        }
+        .action-btn {
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        .action-btn:hover {
+            background-color: #FFA500;
+        }
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Portfolio</h1>
+
+    <table class="portfolio-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price (USD)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="portfolio-body">
+            <!-- Dynamically inserted rows will appear here -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchPrices() {
+            try {
+                const response = await fetch('/get_prices'); 
+                const prices = await response.json();
+
+                // Portfolio assets
+                const portfolio = [
+                    { symbol: "BTCUSDT", name: "Bitcoin" },
+                    { symbol: "ETHUSDT", name: "Ethereum" },
+                    { symbol: "BNBUSDT", name: "Binance Coin" },
+                    { symbol: "ADAUSDT", name: "Cardano" },
+                    { symbol: "SOLUSDT", name: "Solana" }
+                ];
+
+                const tableBody = document.getElementById('portfolio-body');
+                tableBody.innerHTML = ""; // Clear existing rows
+
+                portfolio.forEach(crypto => {
+                    const price = prices[crypto.symbol] ? parseFloat(prices[crypto.symbol]).toFixed(2) : "N/A";
+
+                    const row = `
+                        <tr>
+                            <td>${crypto.name}</td>
+                            <td id="${crypto.symbol}">${price}</td>
+                            <td>
+                                <button class="action-btn" onclick="handleTransaction('buy', '${crypto.name}')">Buy</button>
+                                <input type="number" class="quantity-input" id="quantity-${crypto.name}" min="0" max="1000" value="1">
+                                <button class="action-btn" onclick="handleTransaction('sell', '${crypto.name}')">Sell</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("Error fetching prices:", error);
+            }
+        }
+
+        function handleTransaction(type, cryptoName) {
+            const quantity = document.getElementById(`quantity-${cryptoName}`).value;
+            alert(`${quantity} ${cryptoName} ${type === 'buy' ? 'Bought' : 'Sold'}`);
+        }
+
+        // Fetch prices when the page loads
+        fetchPrices();
+        
+        // Update prices every 5 seconds
+        setInterval(fetchPrices, 5000);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+body {
+    background-color: #0D1117;
+    color: #C9D1D9;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.container {
+    width: 60%;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #F0B90B;
+    text-shadow: 0px 0px 10px rgba(240, 185, 11, 0.7);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Table Styling */
+.crypto-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #161B22;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.crypto-table th {
+    color: #F0B90B;
+    font-size: 1.3rem;
+    padding: 15px;
+}
+
+.crypto-table td {
+    padding: 15px;
+    font-size: 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid #21262D;
+}
+
+/* Evenly space Name and Price columns */
+.crypto-table tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+/* Boxed Name and Price */
+.crypto-name, .crypto-price {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Crypto Name Box */
+.crypto-name {
+    background: linear-gradient(135deg, #F0B90B, #FFCE3E);
+    color: #0D1117;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(240, 185, 11, 0.5);
+}
+
+/* Crypto Price Box */
+.crypto-price {
+    background-color: #21262D;
+    color: #F0B90B;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Hover Effects */
+.crypto-name:hover, .crypto-price:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 15px rgba(240, 185, 11, 0.8);
+}
+
+/* Icons */
+.icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+/* Animated Refresh Button */
+.refresh-btn {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #F0B90B, #FFCE3E);
+    color: #0D1117;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 0px 10px rgba(240, 185, 11, 0.5);
+}
+
+.refresh-btn:hover {
+    background: #FFD700;
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.8);
+}
+
+/* Price Animation */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+.crypto-price {
+    animation: pulse 2s infinite;
+}
+
+/* Fade In Effect */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,53 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const socket = io();
+
+    // Function to fetch prices from API
+    async function fetchPrices() {
+        try {
+            const response = await fetch("/get_prices"); // Fetch from your backend API
+            const data = await response.json();
+
+            if (data.error) {
+                console.error("❌ Error fetching prices:", data.error);
+                return;
+            }
+
+            console.log("📊 Initial API Prices:", data); // Debugging output
+            updatePrices(data); // Update UI with API data
+        } catch (error) {
+            console.error("❌ API Fetch Error:", error);
+        }
+    }
+
+    // Function to update prices in the DOM
+    function updatePrices(data) {
+        for (let symbol in data) {
+            let priceElement = document.getElementById(symbol);
+            if (priceElement) {
+                let newPrice = `$${parseFloat(data[symbol]).toFixed(2)}`;
+
+                // Animate price change
+                priceElement.style.opacity = "0";
+                setTimeout(() => {
+                    priceElement.textContent = newPrice;
+                    priceElement.style.opacity = "1";
+                }, 300);
+            } else {
+                console.warn(`⚠️ Element #${symbol} not found in DOM`);
+            }
+        }
+    }
+
+    // Fetch prices immediately on page load
+    fetchPrices();
+
+    // WebSocket connection to receive real-time price updates
+    socket.on("price_update", function (data) {
+        console.log("📊 Live WebSocket Prices:", data); // Debugging output
+        updatePrices(data);
+    });
+
+    // Poll prices every 5 seconds as a backup
+    setInterval(fetchPrices, 5000);
+});
+
